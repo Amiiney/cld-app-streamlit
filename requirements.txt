@@ -9,5 +9,5 @@ torch==1.6.0
 torchvision==0.7.0
 tqdm==4.45.0
 albumentations==0.5.1
-PIL==7.0.0
+Pillow==7.0.0
 matplotlib==3.1.3
