@@ -1,6 +1,6 @@
 # cld-app-streamlit
  
- This project is a computer vision app, an end-to-end image classification with pytorch. The app classifies and predicts diseases in cassava plant images. The user has 2 options: Upload his own image or select an image for a demo. The model was trained with the cassava leaf disease dataset on Kaggle
+ This project is a computer vision app, an end-to-end image classification with pytorch. The app classifies and predicts diseases in cassava plant images. The user has 2 options: Upload his own image or select an image for a demo. The model was trained with the [Cassava leaf disease prediction dataset](https://www.kaggle.com/c/cassava-leaf-disease-classification).
  ![alt text](https://github.com/Amiiney/cld-app-streamlit/blob/main/images/Screen%20Shot%202021-03-05%20at%2020.31.53.png)
  
  
@@ -15,10 +15,10 @@
  ```
  
 ## Reproducibility:
-If you are looking for your first computer vision project, this app is a good starting point. The CLD web app can be reused in other image classification projects. You only need to change the model/weights and with some modifications and benefit from the app's built-in features.
+If you are looking for your first computer vision project, this app is a good starting point. The CLD web app can be reused in other image classification projects. You only need to change the model/weights with some modifications and benefit from the app's built-in features.
 
 ## Models:
-The models script has 3 models: Seresnext50_32_4d, ViT_base_16 an efficientnetB3 models. Only weights for seresnext50_32_4d are available for now. I will upload the other models weights in future commits.
+The [models script](https://github.com/Amiiney/cld-app-streamlit/blob/main/models.py) has 3 models: Seresnext50_32_4d, ViT_base_16 an efficientnetB3 models. Only weights for seresnext50_32_4d are available for now. I will upload the other models weights in future commits.
 
 ## Features:
 >The main User Interface features are:
