@@ -33,8 +33,7 @@ output_image= my_path + '/images//gradcam2.png'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = resnext50_32x4d(CFG.model_name, pretrained=False)
 states = [load_state( my_path+'/weights/resnext50_32x4d_fold0_best.pth')]
-#model_path= my_path + '/weights/resnext50_32x4d_fold0_best.pth'
-#model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'))['model'], strict=True)
+
 #For Grad-cam features
 final_conv = model.model.layer4[2]._modules.get('conv3')
 fc_params = list(model.model._modules.get('fc').parameters())
