@@ -43,14 +43,20 @@ result_pred="""<div class="card text-white bg-success mb-3" style="max-width: 18
 """
 
 unknown="""
-<div class="alert alert-success" role="alert">
-  Result:  <b> UNKNOWN CLASS  </b>
+<div class="alert alert-danger" role="alert">
+   <b> UNKNOWN CLASS  </b>
 </div>
 """
 
-unknown_side= """<div class="alert alert-info" role="alert">
- Result:  <b> UNKNOWN CLASS </b>
- </div>
+unknown_side= """
+<div class="alert alert-danger" role="alert">
+   <b> UNKNOWN CLASS  </b>
+</div>
+"""
+unknown_msg= """
+<div class="alert alert-danger" role="alert">
+   <b> UNKNOWN CLASS!!! </b> All the classes have low probabilities
+</div>
 """
 
 unknown_w= """

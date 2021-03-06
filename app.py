@@ -10,7 +10,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
-from html_mardown import app_off,app_off2, model_predicting, loading_bar, result_pred, image_uploaded_success, more_options, class0, class1, class2, class3, class4, s_load_bar, class0_side, class1_side, class2_side, class3_side, class4_side, unknown, unknown_side, unknown_w
+from html_mardown import app_off,app_off2, model_predicting, loading_bar, result_pred, image_uploaded_success, more_options, class0, class1, class2, class3, class4, s_load_bar, class0_side, class1_side, class2_side, class3_side, class4_side, unknown, unknown_side, unknown_w, unknown_msg
 
 #Hide warnings
 st.set_option("deprecation.showfileUploaderEncoding", False)
@@ -139,7 +139,7 @@ def deploy(file_path=None,uploaded_image=uploaded_image, uploaded=False, demo=Tr
         #Display the class probabilities table
         st.title('**Class predictions:**') 
         if np.amax(logits) < 0.57:
-            st.subheader("UNKNOWN CLASS!!! All the classes have low probabilities")
+            st.markdown(unknown_msg, unsafe_allow_html=True)
         classes['class probability %']= logits.reshape(-1).tolist()
         classes['class probability %']= classes['class probability %'] * 100
         classes_proba = classes.style.background_gradient(cmap='Reds')
