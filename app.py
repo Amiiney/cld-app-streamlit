@@ -3,7 +3,6 @@ from dataset import CassavaDataset, get_transforms, classes
 from inference import load_state, inference
 from utils import CFG
 from grad_cam import SaveFeatures, getCAM, plotGradCAM
-from deploy import deploy_app
 import torch
 from torch.utils.data import DataLoader, Dataset
 import cv2
@@ -21,12 +20,7 @@ st.title('Cassava disease prediction Web App')
 
 
 #Set the directory path
-github_mode= True
-
-if github_mode:
-    my_path= '.'
-else:
-    my_path= '/Users/amir/Desktop/Projects/Casssava webapp'
+my_path= '.'
 
 test=pd.read_csv( my_path + '/data/sample.csv')
 img_1_path= my_path + '/images/img_1.jpg'
@@ -45,14 +39,6 @@ st.write('**For more info:** [Blog Post](https://aminey.medium.com/how-to-train-
 st.markdown('***')
 
 
-#Load the model and the weights
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model = resnext50_32x4d(CFG.model_name, pretrained=False)
-states = [load_state( my_path + '/weights/resnext50_32x4d_fold0_best.pth')]
-
-#For Grad-cam features
-final_conv = model.model.layer4[2]._modules.get('conv3')
-fc_params = list(model.model._modules.get('fc').parameters())
 
 
 #Set the selectbox for demo images
@@ -67,16 +53,99 @@ uploaded_image = st.file_uploader("Upload your image in JPG or PNG format", type
 
 
 #DataLoader for pytorch dataset
-def Loader(img_path, upload_state=False, demo_state=True):
-    test_dataset = CassavaDataset(test,img_path, uploaded_image,transform=get_transforms(data='valid'), uploaded_state=upload_state, demo_state=demo_state)
+def Loader(img_path=None,uploaded_image=None, upload_state=False, demo_state=True):
+    test_dataset = CassavaDataset(test,img_path, uploaded_image=uploaded_image,transform=get_transforms(data='valid'), uploaded_state=upload_state, demo_state=demo_state)
     test_loader = DataLoader(test_dataset, batch_size=CFG.batch_size, shuffle=False, 
                          num_workers=CFG.num_workers, pin_memory=True)
     return test_loader
 
-test_loader= Loader(img_1_path, upload_state=True, demo_state=False) #Uploaded image
-test_loader1= Loader(img_1_path) #Demo Image 1
-test_loader2= Loader(img_2_path) #Demo Image 2
-test_loader3= Loader(img_3_path) #Demo Image 3
+
+def deploy(file_path=None,uploaded_image=uploaded_image, uploaded=False, demo=True):
+    
+    #Load the model and the weights
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model = resnext50_32x4d(CFG.model_name, pretrained=False)
+    states = [load_state( my_path + '/weights/resnext50_32x4d_fold0_best.pth')]
+
+    #For Grad-cam features
+    final_conv = model.model.layer4[2]._modules.get('conv3')
+    fc_params = list(model.model._modules.get('fc').parameters())
+    
+    st.markdown('***')
+    st.markdown(model_predicting, unsafe_allow_html=True)
+    if demo:
+        test_loader= Loader(img_path=file_path) 
+        image_1 = cv2.imread(file_path)
+    if uploaded:
+        test_loader= Loader(uploaded_image=uploaded_image, upload_state=True, demo_state=False)
+        image_1 = file_path
+    st.sidebar.markdown(image_uploaded_success, unsafe_allow_html=True)
+    st.sidebar.image(image_1, width=301, channels='BGR')
+    
+    for img in test_loader:
+        activated_features = SaveFeatures(final_conv)
+        #Save weight from fc
+        weight = np.squeeze(fc_params[0].cpu().data.numpy())
+        
+        #Inference
+        logits, output = inference(model, states, img, device)
+        pred_idx = output.to('cpu').numpy().argmax(1)
+        
+        #Grad-cam image display
+        cur_images = img.cpu().numpy().transpose((0, 2, 3, 1))
+        heatmap = getCAM(activated_features.features, weight, pred_idx)
+        plt.imshow(cv2.cvtColor((cur_images[0]* 255).astype('uint8'), cv2.COLOR_BGR2RGB))
+        plt.imshow(cv2.resize((heatmap* 255).astype('uint8'), (328, 328), interpolation=cv2.INTER_LINEAR), alpha=0.4, cmap='jet')
+        plt.savefig(output_image)
+
+        #Display Unknown class if the highest probability is lower than 0.5
+        if np.amax(logits) < 0.57:
+            st.markdown(unknown,unsafe_allow_html=True)
+            st.sidebar.markdown(unknown_side, unsafe_allow_html=True)
+            st.sidebar.markdown(unknown_w, unsafe_allow_html=True)
+        
+        #Display the class predicted if the highest probability is higher than 0.5
+        else:
+            if pred_idx[0]==0:
+                st.markdown(class0, unsafe_allow_html=True)
+                st.sidebar.markdown(class0_side, unsafe_allow_html=True)
+                st.write(" The predicted class is: **Cassava Bacterial Blight (CBB)**" )
+            elif pred_idx[0]==1:
+                st.markdown(class1, unsafe_allow_html=True)
+                st.sidebar.markdown(class1_side, unsafe_allow_html=True)
+                st.write("The predicted class is: **Cassava Brown Streak Disease (CBSD)**" )
+            elif pred_idx[0]==2:
+                st.markdown(class2, unsafe_allow_html=True)
+                st.sidebar.markdown(class2_side, unsafe_allow_html=True)
+                st.write("The predicted class is: **Cassava Green Mottle (CGM)**" )
+            elif pred_idx[0]==3:
+                st.markdown(class3, unsafe_allow_html=True)
+                st.sidebar.markdown(class3_side, unsafe_allow_html=True)
+                st.write("The predicted class is: **Cassava Mosaic Disease (CMD)**" )
+            elif pred_idx[0]==4:
+                st.markdown(class4, unsafe_allow_html=True)
+                st.sidebar.markdown(class4_side, unsafe_allow_html=True)
+                st.write("The predicted class is: **Healthy**" )
+
+        st.sidebar.markdown('**Scroll down to read the full report (Grad-cam and class probabilities)**')
+
+        #Display the Grad-Cam image
+        st.title('**Grad-cam visualization**')
+        st.write('Grad-cam highlights the important regions in the image for predicting the class concept. It helps to understand if the model based its predictions on the correct regions of the image.')
+        st.write('*Grad-Cam is facing some color channels conflict. I am working on fixing the bug!*')
+        gram_im= cv2.imread(output_image)
+        st.image(gram_im, width=528, channels='RGB')
+        
+        #Display the class probabilities table
+        st.title('**Class predictions:**') 
+        if np.amax(logits) < 0.57:
+            st.subheader("UNKNOWN CLASS!!! All the classes have low probabilities")
+        classes['class probability %']= logits.reshape(-1).tolist()
+        classes['class probability %']= classes['class probability %'] * 100
+        classes_proba = classes.style.background_gradient(cmap='Reds')
+        st.write(classes_proba)
+        del model, states, fc_params, final_conv,test_loader, image_1, activated_features, weight, cur_images,heatmap, gram_im, logits, output, pred_idx
+
 
 
 #Set red flag if no image is selected/uploaded
@@ -87,22 +156,23 @@ if uploaded_image is None and choice=='Select an Image':
 
 #Deploy the model if the user uploads an image
 if uploaded_image is not None:
-    deploy_app(test_loader, uploaded_image, uploaded=True, demo=False)
+    deploy(uploaded_image, uploaded=True, demo=False)
+    del uploaded_image
 
 
 #Deploy the model if the user selects Image 1
 if choice== 'Image 1':
-    deploy_app(test_loader1, img_1_path)
+    deploy(img_1_path)
 
 
 #Deploy the model if the user selects Image 2
 if choice== 'Image 2':
-    deploy_app(test_loader2, img_2_path) 
+    deploy(img_2_path) 
 
 
 #Deploy the model if the user selects Image 3
 if choice== 'Image 3':
-    deploy_app(test_loader3, img_3_path)  
+    deploy(img_3_path)  
     
 
 

@@ -26,7 +26,7 @@ def load_state(model_path):
     state_dict = torch.load(model_path, map_location=torch.device('cpu'))['model']
     return state_dict
 
-@st.cache(allow_output_mutation=True, max_entries=10, ttl=3600)
+#@st.cache(allow_output_mutation=True, max_entries=10, ttl=3600)
 def inference(model, states, img, device):
     model.to(device)
     probs = []

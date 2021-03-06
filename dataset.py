@@ -9,7 +9,7 @@ from utils import CFG
 
 
 class CassavaDataset(Dataset):
-    def __init__(self,df, file_path, uploaded_image=None, transform=None, uploaded_state=False, demo_state=True):
+    def __init__(self,df, file_path=None, uploaded_image=None, transform=None, uploaded_state=False, demo_state=True):
         self.df = df
         self.file_path= file_path
         self.uploaded_image = uploaded_image

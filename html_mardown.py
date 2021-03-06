@@ -44,12 +44,12 @@ result_pred="""<div class="card text-white bg-success mb-3" style="max-width: 18
 
 unknown="""
 <div class="alert alert-success" role="alert">
-  Result:  <b> UNKNOWN IMAGE  </b>
+  Result:  <b> UNKNOWN CLASS  </b>
 </div>
 """
 
 unknown_side= """<div class="alert alert-info" role="alert">
- Result:  <b> UNKNOWN IMAGE </b>
+ Result:  <b> UNKNOWN CLASS </b>
  </div>
 """
 
