@@ -11,7 +11,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
-from PIL import Image
 from html_mardown import app_off,app_off2, model_predicting, loading_bar, result_pred, image_uploaded_success, more_options, class0, class1, class2, class3, class4, s_load_bar, class0_side, class1_side, class2_side, class3_side, class4_side
 
 #Hide warnings
@@ -38,8 +37,7 @@ output_image= my_path + '/images//gradcam2.png'
 
 
 #Read and display the banner
-banner = Image.open(banner_path)
-st.sidebar.image(banner,use_column_width=True)
+st.sidebar.image(banner_path,use_column_width=True)
 
 #App description
 st.write("The app predicts diseases in Cassava plants. The model was trained with the [cassava leaf disease dataset on Kaggle](https://www.kaggle.com/c/cassava-leaf-disease-classification/data). ")

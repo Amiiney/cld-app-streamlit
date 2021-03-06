@@ -10,7 +10,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
-from PIL import Image
 from html_mardown import app_off,app_off2, model_predicting, loading_bar, result_pred, image_uploaded_success, more_options, class0, class1, class2, class3, class4, s_load_bar, class0_side, class1_side, class2_side, class3_side, class4_side
 import matplotlib
 
