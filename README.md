@@ -1,7 +1,7 @@
 # cld-app-streamlit
  
  This project is a computer vision app, an end-to-end image classification with pytorch. The app classifies and predicts diseases in cassava plant images. The user has 2 options: Upload his own image or select an image for a demo. The model was trained with the [Cassava leaf disease prediction dataset](https://www.kaggle.com/c/cassava-leaf-disease-classification).
- ![alt text](https://github.com/Amiiney/cld-app-streamlit/blob/main/images/Screen%20Shot%202021-03-05%20at%2020.31.53.png)
+ ![alt text](https://github.com/Amiiney/cld-app-streamlit/blob/main/images/cld-app.gif)
  
  
  ## How to run the app?
