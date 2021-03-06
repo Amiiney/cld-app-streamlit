@@ -144,7 +144,7 @@ def deploy(file_path=None,uploaded_image=uploaded_image, uploaded=False, demo=Tr
         classes['class probability %']= classes['class probability %'] * 100
         classes_proba = classes.style.background_gradient(cmap='Reds')
         st.write(classes_proba)
-        del model, states, fc_params, final_conv,test_loader, image_1, activated_features, weight, cur_images,heatmap, gram_im, logits, output, pred_idx
+        del model, states, fc_params, final_conv,test_loader, image_1, activated_features, weight, cur_images,heatmap, gram_im, logits, output, pred_idx, classes_proba
 
 
 
