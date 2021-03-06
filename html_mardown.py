@@ -49,7 +49,7 @@ unknown="""
 """
 
 unknown_side= """<div class="alert alert-info" role="alert">
- Result:  <b> UNKNWON IMAGE </b>
+ Result:  <b> UNKNOWN IMAGE </b>
  </div>
 """
 
