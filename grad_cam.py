@@ -9,7 +9,6 @@ from torch.optim import Adam, SGD
 import torchvision.models as models
 from torch.nn.parameter import Parameter
 import cv2
-from PIL import Image
 import PIL
 print(PIL.__version__)
 

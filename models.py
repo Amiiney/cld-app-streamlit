@@ -13,7 +13,6 @@ from torch.nn.parameter import Parameter
 class resnext50_32x4d(nn.Module):
     def __init__(self, model_name='resnext50_32x4d',targets=5, pretrained=False):
         super().__init__()
-        #self.model = timm.create_model(model_name, pretrained=pretrained)
         self.model = models.resnext50_32x4d()
         n_features = self.model.fc.in_features
         self.model.fc = nn.Linear(n_features, targets)

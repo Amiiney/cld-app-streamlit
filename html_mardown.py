@@ -42,9 +42,27 @@ result_pred="""<div class="card text-white bg-success mb-3" style="max-width: 18
 </div>
 """
 
+unknown="""
+<div class="alert alert-success" role="alert">
+  Result:  <b> UNKNOWN IMAGE  </b>
+</div>
+"""
+
+unknown_side= """<div class="alert alert-info" role="alert">
+ Result:  <b> UNKNWON IMAGE </b>
+ </div>
+"""
+
+unknown_w= """
+<div class="alert alert-block alert-warning">
+<b> Please Upload a plant Image </b>
+</div>
+"""
+
+
 class0="""
 <div class="alert alert-success" role="alert">
-  Result:  <b> Cassava Bacterial Blight (CBB) </b>
+  Result:  <b> Cassava Bacterial Blight disease (CBB)  </b>
 </div>
 """
 class1="""
@@ -55,7 +73,7 @@ class1="""
 
 class2="""
 <div class="alert alert-success" role="alert">
-  Result:  <b> Cassava Green Mottle (CGM) </b>
+  Result:  <b> Cassava Green Mottle disease (CGM)  </b>
 </div>
 """
 
@@ -82,7 +100,7 @@ more_options="""
 
 
 class0_side= """<div class="alert alert-info" role="alert">
- Result:  <b> Cassava Bacterial Blight (CBB) </b>
+ Result:  <b> Cassava Bacterial Blight disease (CBB) </b>
  </div>
 """
 
@@ -92,7 +110,7 @@ class1_side= """<div class="alert alert-info" role="alert">
 """
 
 class2_side= """<div class="alert alert-info" role="alert">
- Result:  <b> Cassava Green Mottle (CGM) </b>
+ Result:  <b> Cassava Green Mottle disease (CGM) </b>
  </div>
 """
 class3_side= """<div class="alert alert-info" role="alert">

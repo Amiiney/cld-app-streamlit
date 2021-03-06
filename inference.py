@@ -6,13 +6,9 @@ import shutil
 from pathlib import Path
 from contextlib import contextmanager
 from collections import defaultdict, Counter
-import scipy as sp
 import numpy as np
 import pandas as pd
 import torch
-from sklearn import preprocessing
-from sklearn.metrics import accuracy_score
-from tqdm.auto import tqdm
 from functools import partial
 import streamlit as st
 
@@ -30,7 +26,7 @@ def load_state(model_path):
     state_dict = torch.load(model_path, map_location=torch.device('cpu'))['model']
     return state_dict
 
-@st.cache
+@st.cache(allow_output_mutation=True, max_entries=10, ttl=3600)
 def inference(model, states, img, device):
     model.to(device)
     probs = []

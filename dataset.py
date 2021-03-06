@@ -2,7 +2,6 @@ from torch.utils.data import DataLoader, Dataset
 import numpy as np
 import pandas as pd
 import cv2
-from PIL import Image
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from utils import CFG

@@ -10,7 +10,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
-from html_mardown import app_off,app_off2, model_predicting, loading_bar, result_pred, image_uploaded_success, more_options, class0, class1, class2, class3, class4, s_load_bar, class0_side, class1_side, class2_side, class3_side, class4_side
+from html_mardown import app_off,app_off2, model_predicting, loading_bar, result_pred, image_uploaded_success, more_options, class0, class1, class2, class3, class4, s_load_bar, class0_side, class1_side, class2_side, class3_side, class4_side, unknown, unknown_side, unknown_w
 import matplotlib
 
 #Setting directory path
@@ -76,28 +76,34 @@ def deploy_app(test_loader, file_path, uploaded=False, demo=True):
         plt.imshow(cv2.resize((heatmap* 255).astype('uint8'), (328, 328), interpolation=cv2.INTER_LINEAR), alpha=0.4, cmap='jet')
         plt.savefig(output_image)
 
+        #Display Unknown class if the highest probability is lower than 0.5
+        if np.amax(logits) < 0.5:
+            st.markdown(unknown,unsafe_allow_html=True)
+            st.sidebar.markdown(unknown_side, unsafe_allow_html=True)
+            st.sidebar.markdown(unknown_w, unsafe_allow_html=True)
         
-        #Outputing our model's prediction results
-        if pred_idx[0]==0:
-            st.markdown(class0, unsafe_allow_html=True)
-            st.sidebar.markdown(class0_side, unsafe_allow_html=True)
-            st.write(" The predicted class is: **Cassava Bacterial Blight (CBB)**" )
-        elif pred_idx[0]==1:
-            st.markdown(class1, unsafe_allow_html=True)
-            st.sidebar.markdown(class1_side, unsafe_allow_html=True)
-            st.write("The predicted class is: **Cassava Brown Streak Disease (CBSD)**" )
-        elif pred_idx[0]==2:
-            st.markdown(class2, unsafe_allow_html=True)
-            st.sidebar.markdown(class2_side, unsafe_allow_html=True)
-            st.write("The predicted class is: **Cassava Green Mottle (CGM)**" )
-        elif pred_idx[0]==3:
-            st.markdown(class3, unsafe_allow_html=True)
-            st.sidebar.markdown(class3_side, unsafe_allow_html=True)
-            st.write("The predicted class is: **Cassava Mosaic Disease (CMD)**" )
-        elif pred_idx[0]==4:
-            st.markdown(class4, unsafe_allow_html=True)
-            st.sidebar.markdown(class4_side, unsafe_allow_html=True)
-            st.write("The predicted class is: **Healthy**" )
+        #Display the class predicted if the highest probability is higher than 0.5
+        else:
+            if pred_idx[0]==0:
+                st.markdown(class0, unsafe_allow_html=True)
+                st.sidebar.markdown(class0_side, unsafe_allow_html=True)
+                st.write(" The predicted class is: **Cassava Bacterial Blight (CBB)**" )
+            elif pred_idx[0]==1:
+                st.markdown(class1, unsafe_allow_html=True)
+                st.sidebar.markdown(class1_side, unsafe_allow_html=True)
+                st.write("The predicted class is: **Cassava Brown Streak Disease (CBSD)**" )
+            elif pred_idx[0]==2:
+                st.markdown(class2, unsafe_allow_html=True)
+                st.sidebar.markdown(class2_side, unsafe_allow_html=True)
+                st.write("The predicted class is: **Cassava Green Mottle (CGM)**" )
+            elif pred_idx[0]==3:
+                st.markdown(class3, unsafe_allow_html=True)
+                st.sidebar.markdown(class3_side, unsafe_allow_html=True)
+                st.write("The predicted class is: **Cassava Mosaic Disease (CMD)**" )
+            elif pred_idx[0]==4:
+                st.markdown(class4, unsafe_allow_html=True)
+                st.sidebar.markdown(class4_side, unsafe_allow_html=True)
+                st.write("The predicted class is: **Healthy**" )
 
         st.sidebar.markdown('**Scroll down to read the full report (Grad-cam and class probabilities)**')
 
@@ -110,6 +116,8 @@ def deploy_app(test_loader, file_path, uploaded=False, demo=True):
         
         #Display the class probabilities table
         st.title('**Class predictions:**') 
+        if np.amax(logits) < 0.5:
+            st.subheader("UNKNOWN CLASS! All the classes have low probabilities")
         classes['class probability %']= logits.reshape(-1).tolist()
         classes['class probability %']= classes['class probability %'] * 100
         classes_proba = classes.style.background_gradient(cmap='Reds')
