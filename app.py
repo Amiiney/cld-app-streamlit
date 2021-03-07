@@ -3,6 +3,7 @@ from dataset import CassavaDataset, get_transforms, classes
 from inference import load_state, inference
 from utils import CFG
 from grad_cam import SaveFeatures, getCAM, plotGradCAM
+import gc
 import torch
 from torch.utils.data import DataLoader, Dataset
 import cv2
@@ -11,6 +12,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
 from html_mardown import app_off,app_off2, model_predicting, loading_bar, result_pred, image_uploaded_success, more_options, class0, class1, class2, class3, class4, s_load_bar, class0_side, class1_side, class2_side, class3_side, class4_side, unknown, unknown_side, unknown_w, unknown_msg
+
+#Enable garbage collection
+gc.enable()
 
 #Hide warnings
 st.set_option("deprecation.showfileUploaderEncoding", False)
@@ -145,7 +149,7 @@ def deploy(file_path=None,uploaded_image=uploaded_image, uploaded=False, demo=Tr
         classes_proba = classes.style.background_gradient(cmap='Reds')
         st.write(classes_proba)
         del model, states, fc_params, final_conv,test_loader, image_1, activated_features, weight, cur_images,heatmap, gram_im, logits, output, pred_idx, classes_proba
-
+        gc.collect()
 
 
 #Set red flag if no image is selected/uploaded
