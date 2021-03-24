@@ -64,8 +64,8 @@ def Loader(img_path=None,uploaded_image=None, upload_state=False, demo_state=Tru
     return test_loader
 
 
+#Function to deplot the model and print the report
 def deploy(file_path=None,uploaded_image=uploaded_image, uploaded=False, demo=True):
-    
     #Load the model and the weights
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = resnext50_32x4d(CFG.model_name, pretrained=False)
@@ -75,6 +75,7 @@ def deploy(file_path=None,uploaded_image=uploaded_image, uploaded=False, demo=Tr
     final_conv = model.model.layer4[2]._modules.get('conv3')
     fc_params = list(model.model._modules.get('fc').parameters())
     
+    #Display the uploaded/selected image
     st.markdown('***')
     st.markdown(model_predicting, unsafe_allow_html=True)
     if demo:
@@ -160,6 +161,9 @@ if uploaded_image is None and choice=='Select an Image':
 
 #Deploy the model if the user uploads an image
 if uploaded_image is not None:
+    #Close the demo
+    choice='Select an image'
+    #Deploy the model with the uploaded image
     deploy(uploaded_image, uploaded=True, demo=False)
     del uploaded_image
 
