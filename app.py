@@ -64,7 +64,7 @@ def Loader(img_path=None,uploaded_image=None, upload_state=False, demo_state=Tru
     return test_loader
 
 
-#Function to deplot the model and print the report
+#Function to deploy the model and print the report
 def deploy(file_path=None,uploaded_image=uploaded_image, uploaded=False, demo=True):
     #Load the model and the weights
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -162,7 +162,7 @@ if uploaded_image is None and choice=='Select an Image':
 #Deploy the model if the user uploads an image
 if uploaded_image is not None:
     #Close the demo
-    choice='Select an image'
+    choice='Select an Image'
     #Deploy the model with the uploaded image
     deploy(uploaded_image, uploaded=True, demo=False)
     del uploaded_image
