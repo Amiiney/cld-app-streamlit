@@ -31,7 +31,7 @@ img_1_path= my_path + '/images/img_1.jpg'
 img_2_path= my_path + '/images/img_2.jpg'
 img_3_path= my_path + '/images/img_3.jpg'
 banner_path= my_path + '/images/banner.png'
-output_image= my_path + '/images//gradcam2.png'
+output_image= my_path + '/images/gradcam2.png'
 
 
 #Read and display the banner
