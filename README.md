@@ -2,6 +2,8 @@
  
  This project is a computer vision app, an end-to-end image classification web app with pytorch. The app classifies and predicts diseases in cassava plant images. The user has 2 options: Upload his own image or select an image for a demo. 
  
+ Link to the Web App: https://share.streamlit.io/amiiney/cld-app-streamlit/main/app.py
+ 
  
  ![alt text](https://github.com/Amiiney/cld-app-streamlit/blob/main/images/cld-app.gif)
  
