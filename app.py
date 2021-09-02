@@ -96,10 +96,16 @@ def deploy(file_path=None,uploaded_image=uploaded_image, uploaded=False, demo=Tr
         logits, output = inference(model, states, img, device)
         pred_idx = output.to('cpu').numpy().argmax(1)
         
-        #Grad-cam image display
-        cur_images = img.cpu().numpy().transpose((0, 2, 3, 1))
+        #Grad-cam heatmap display
         heatmap = getCAM(activated_features.features, weight, pred_idx)
-        plt.imshow(cv2.cvtColor((cur_images[0]* 255).astype('uint8'), cv2.COLOR_BGR2RGB))
+        
+        ##Reverse the pytorch normalization
+        MEAN = torch.tensor([0.485, 0.456, 0.406])
+        STD = torch.tensor([0.229, 0.224, 0.225])
+        image = img[0] * STD[:, None, None] + MEAN[:, None, None]
+        
+        #Display image + heatmap
+        plt.imshow(image.permute(1, 2, 0))
         plt.imshow(cv2.resize((heatmap* 255).astype('uint8'), (328, 328), interpolation=cv2.INTER_LINEAR), alpha=0.4, cmap='jet')
         plt.savefig(output_image)
 
@@ -136,8 +142,7 @@ def deploy(file_path=None,uploaded_image=uploaded_image, uploaded=False, demo=Tr
 
         #Display the Grad-Cam image
         st.title('**Grad-cam visualization**')
-        st.write('Grad-cam highlights the important regions in the image for predicting the class concept. It helps to understand if the model based its predictions on the correct regions of the image.')
-        st.write('*Grad-Cam is facing some color channels conflict. I am working on fixing the bug!*')
+        st.write('Grad-cam *(Class Acvitation Map)* highlights the important regions in the image for predicting the class concept. It helps to understand if the model based its predictions on the correct regions of the image.')
         gram_im= cv2.imread(output_image)
         st.image(gram_im, width=528, channels='RGB')
         
@@ -149,7 +154,7 @@ def deploy(file_path=None,uploaded_image=uploaded_image, uploaded=False, demo=Tr
         classes['class probability %']= classes['class probability %'] * 100
         classes_proba = classes.style.background_gradient(cmap='Reds')
         st.write(classes_proba)
-        del model, states, fc_params, final_conv,test_loader, image_1, activated_features, weight, cur_images,heatmap, gram_im, logits, output, pred_idx, classes_proba
+        del model, states, fc_params, final_conv,test_loader, image_1, activated_features, weight,heatmap, gram_im, logits, output, pred_idx, classes_proba
         gc.collect()
 
 
