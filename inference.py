@@ -15,18 +15,23 @@ import streamlit as st
 from models import resnext50_32x4d
 from utils import CFG
 
-import warnings 
-warnings.filterwarnings('ignore')
+import warnings
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+warnings.filterwarnings("ignore")
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 def load_state(model_path):
     model = resnext50_32x4d(CFG.model_name, pretrained=False)
-    model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu'))['model'], strict=True)
-    state_dict = torch.load(model_path, map_location=torch.device('cpu'))['model']
+    model.load_state_dict(
+        torch.load(model_path, map_location=torch.device("cpu"))["model"], strict=True
+    )
+    state_dict = torch.load(model_path, map_location=torch.device("cpu"))["model"]
     return state_dict
 
-#@st.cache(allow_output_mutation=True, max_entries=10, ttl=3600)
+
+# @st.cache(allow_output_mutation=True, max_entries=10, ttl=3600)
 def inference(model, states, img, device):
     model.to(device)
     probs = []
@@ -37,7 +42,7 @@ def inference(model, states, img, device):
         model.eval()
         with torch.no_grad():
             preds = model(img)
-        avg_preds.append(preds.softmax(1).to('cpu').numpy())
+        avg_preds.append(preds.softmax(1).to("cpu").numpy())
     avg_preds = np.mean(avg_preds, axis=0)
     probs.append(avg_preds)
     probs = np.concatenate(probs)
